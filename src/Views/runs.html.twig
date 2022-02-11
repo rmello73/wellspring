@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Loaded Info</title>
+        <style>
+        tr:nth-child(even) {
+        background-color: #ececec;
+        }
+        </style>
+    </head>
+    <body>
+        {% block content %}{% endblock %}
+    </body>
+</html>
+
+<div>
+    <p>Upload File</p>
+    <form action="upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="{{ app.file_upload_name }}">
+        <input type="submit">
+    </form>
+</div>
+
+<div>&nbsp;</div>
+<div>
+    <table id="sortTable">
+        <thead
+            <tr>
+                <th onclick="sortTable(0)"><b>Train Line</b></th>
+                <th onclick="sortTable(1)"><b>Route Name</b></th>
+                <th onclick="sortTable(2)"><b>Run Number</b></th>
+                <th onclick="sortTable(3)"><b>Operator ID</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+            <tr>
+                <td>{{ run.line }}</td>
+                <td>{{ run.route }}</td>
+                <td>{{ run.number }}</td>
+                <td>{{ run.operatorId }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("sortTable");
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
